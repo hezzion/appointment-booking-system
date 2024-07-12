@@ -1,6 +1,6 @@
 <?php
-session_start();
 include("../includes/db.php");
+session_start();
 
 $fullname = $department = $password = $email = $phone = "";
 
