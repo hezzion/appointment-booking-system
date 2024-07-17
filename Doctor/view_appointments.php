@@ -341,15 +341,15 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                                                     <div class="form-group">
                                                         <label for="reply">Enter Reply:</label>
                                                         <textarea class="form-control" id="reply" name="reply" rows="4"></textarea>
-                                                    </div>
-                                                    <div class="form-group">
-                                                        <label for="toggleSwitch">Status:</label>
-                                                        <label class="switch">
-                                                            <input type="checkbox" id="toggleSwitch">
-                                                            <span class="slider round"></span>
-                                                        </label>
-                                                        <input type="text" id='checkedValue' name='checkedValue'>
-                                                    </div>
+                                                        <div class="form-group">
+                                                            <label for="status">Status:</label>
+                                                            <select class="form-control" id="status" name="status">
+                                                                <option value="Approved">Approved</option>
+                                                                <option value="Declined">Declined</option>
+                                                                <option value="Pending">Pending</option>
+                                                            </select>
+                                                            <input type="hidden" id="checkedValue" name="checkedValue">
+                                                        </div>
                                                     <input type="hidden" id='appointment_id' name='appointment_id'>
                                                     <div class="modal-footer">
                                                         <button class="btn btn-danger" type="button" data-dismiss="modal">Cancel</button>
@@ -403,7 +403,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 <div class="modal-header">
                     <h5 class="modal-title" id="exampleModalLabel">Ready to Leave?</h5>
                     <button class="close" type="button" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">×</span>
+                        <span aria-hidden="true">&times;</span>
                     </button>
                 </div>
                 <div class="modal-body">Select "Logout" below if you are ready to end your current session.</div>
@@ -466,14 +466,12 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         modal.find('.modal-body #appointment_id').val(appointmentId);
         modal.find('.modal-body #reply').val(reply);
         modal.find('.modal-body #checkedValue').val(status);
+        modal.find('.modal-body #status').val(status);
     });
 
-    document.getElementById('toggleSwitch').addEventListener('change', function () {
-        if (this.checked) {
-            document.getElementById('checkedValue').value = 'Approved';
-        } else {
-            document.getElementById('checkedValue').value = 'Declined';
-        }
+    document.getElementById('status').addEventListener('change', function () {
+        var selectedValue = this.value;
+        document.getElementById('checkedValue').value = selectedValue;
     });
 </script>
 
