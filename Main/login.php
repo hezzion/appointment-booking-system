@@ -1,3 +1,7 @@
+<?php 
+session_start();
+?>
+
 <!doctype html>
 <html lang="en" dir="ltr">
 
@@ -33,6 +37,15 @@
                     <img src="../assets/images/logo-dark.png" height="22" class="mx-auto d-block" alt="">
                     <div class="card login-page shadow mt-4 rounded border-0">
                         <div class="card-body">
+                            <?php
+                            if (isset($_SESSION['reg_success'])) { ?>
+                            <h6 class="text-center">
+                            <?php
+                                echo $_SESSION['reg_success'];
+                                unset($_SESSION['reg_success']);
+                            }
+                            ?>
+                            </h6>
                             <h4 class="text-center">Login</h4>
                             <?php
                             // Check if form is submitted

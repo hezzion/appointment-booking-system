@@ -62,7 +62,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Zion Doctor</title>
+    <title>Zion Admin</title>
     <!-- favicon -->
     <link rel="icon" style="height: 10px;width: 10px;" href="../assets/images/logo.png" type="image/png">
     
