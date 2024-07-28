@@ -218,8 +218,8 @@ aria-hidden="true">
                         <div class="card">
                         
                         <!-- /.card-header -->
-                        <div class="card-body">
-                            <table id="example2" class="table table-bordered table-hover">
+                        <div class="table-responsive bg-white shadow rounded">
+                            <table id="example2" class="table table-striped table-hover">
                             <thead>
                             <tr>
                                 <th>Patientname</th>
