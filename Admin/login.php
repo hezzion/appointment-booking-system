@@ -87,7 +87,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         <div class="container">
             <div class="row justify-content-center">
                 <div class="col-lg-5 col-md-8">
-                    <img src="../assets/images/logo-dark.png" height="22" class="mx-auto d-block" alt="">
+                    <img src="../assets/images/logo-dark.png" height="50" class="mx-auto d-block" alt="">
                     <div class="card login-page shadow mt-4 rounded border-0">
                     <div class="card-body">
                         <h4 class="text-center">Login</h4>

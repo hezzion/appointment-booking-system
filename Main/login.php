@@ -21,20 +21,29 @@ session_start();
     <link href="../assets/libs/%40iconscout/unicons/css/line.css" type="text/css" rel="stylesheet" />
     <!-- Style Css-->
     <link href="../assets/css/style.min.css" class="theme-opt" rel="stylesheet" type="text/css" />
+    <style>
+        body {
+            font-family: 'Arimo', sans-serif;
+            background: linear-gradient(rgba(0, 108, 187, 0.1), rgba(0, 108, 187, 0.3)), url('../assets/images/blog/07.jpg') no-repeat center center fixed;
+            background-size: cover;
+        }
+        .card {
+            background: rgba(255, 255, 255, 0.9);
+        }
+    </style>
 </head>
 
-<body style="font-family: 'Arimo', sans-serif;">
+<body>
     <div class="back-to-home rounded d-none d-sm-block">
-        <a href="index-two.html" class="btn btn-icon btn-primary"><i data-feather="home" class="icons"></i></a>
+        <a href="index-two.php" class="btn btn-icon btn-primary"><i data-feather="home" class="icons"></i></a>
     </div>
 
     <!-- Hero Start -->
-    <section class="bg-home d-flex bg-light align-items-center"
-        style="background: url('../assets/images/bg/bg-lines-one.png') center;">
+    <section class="bg-home d-flex align-items-center" style="min-height: 100vh;">
         <div class="container">
             <div class="row justify-content-center">
                 <div class="col-lg-5 col-md-8">
-                    <img src="../assets/images/logo-dark.png" height="22" class="mx-auto d-block" alt="">
+                    <img src="../assets/images/logo-dark.png" height="50" class="mx-auto d-block" alt="">
                     <div class="card login-page shadow mt-4 rounded border-0">
                         <div class="card-body">
                             <?php
