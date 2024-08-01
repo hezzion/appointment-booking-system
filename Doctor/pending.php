@@ -14,31 +14,61 @@ if (mysqli_num_rows($doctor_result) > 0) {
     $doctor_name = $row['fullname'];
 }
 
+// $unread_sql = "SELECT COUNT(*) AS unread_count FROM notifications WHERE is_read_doctor = FALSE";
+// $unread_result = mysqli_query($conn, $unread_sql);
+// $unread_count = 0;
+// 
+// if ($unread_result) {
+//     $unread_row = mysqli_fetch_assoc($unread_result);
+//     $unread_count = $unread_row['unread_count'];
+// }
+
 $sql = "SELECT * FROM patients WHERE doctor = '$doctor_name' AND status = 'Pending'";
 $result = mysqli_query($conn, $sql);
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     // Get form data
+    $status = '';
     $reply = mysqli_real_escape_string($conn, $_POST['reply']);
-    $status = mysqli_real_escape_string($conn, $_POST['checkedValue']);
-    $appointment_id = $_POST['appointment_id'];
+    $checkedValue = mysqli_real_escape_string($conn, $_POST['checkedValue']);
+    $appointment_id = mysqli_real_escape_string($conn, $_POST['appointment_id']);
 
-    $sql = "UPDATE patients SET reply = '$reply', status = '$status' WHERE id = $appointment_id";
-
-    // Execute the query
-    if ($conn->query($sql) === TRUE) {
-        header("Location: view_appointments.php");
+    if (empty($checkedValue)) {
+        $status = 'Declined';
     } else {
-        echo "Error updating record: " . $conn->error;
+        $status = $checkedValue;
+    }
+
+    if (!empty($appointment_id)) {
+        // Update the appointment with reply and status
+        $reply_sql = "UPDATE patients SET reply = '$reply', status = '$status' WHERE id = $appointment_id";
+
+        if ($conn->query($reply_sql) === TRUE) {
+            // Fetch patient ID to send notification
+            $patient_sql = "SELECT user_id FROM patients WHERE id = $appointment_id";
+            $patient_result = mysqli_query($conn, $patient_sql);
+            if ($patient_result && mysqli_num_rows($patient_result) > 0) {
+                $patient_row = mysqli_fetch_assoc($patient_result);
+                $patient_id = $patient_row['user_id'];
+
+                // Insert notification
+                $notification_message = "You have a new reply from $doctor_name regarding your appointment.";
+                $notification_sql = "INSERT INTO notifications (user_id, doctor_id, message, is_read_doctor, created_at) VALUES ('$patient_id', '$doctor_id', '$notification_message', 0, NOW())";
+                mysqli_query($conn, $notification_sql);
+            }
+            header("Location: view_appointments.php");
+        } else {
+            echo "Error updating record: " . $conn->error;
+        }
+    } else {
+        echo "Error: Appointment ID is empty.";
     }
 
     $conn->close();
 }
 
-$update_sql = "UPDATE notifications SET is_read_doctor = 1 WHERE doctor_id = '$doctor_id' AND is_read_doctor = 0";
-mysqli_query($conn, $update_sql);
-
 ?>
+
 
 <!DOCTYPE html>
 <html lang="en">
@@ -124,7 +154,7 @@ mysqli_query($conn, $update_sql);
   <div class="modal-dialog" role="document">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title" id="declineReasonModalLabel">Pending Appointment</h5>
+        <h5 class="modal-title" id="declineReasonModalLabel">Decline Appointment</h5>
         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">&times;</span>
         </button>
@@ -239,19 +269,19 @@ mysqli_query($conn, $update_sql);
                     <!-- Topbar Navbar -->
                     <ul class="navbar-nav ml-auto">
                     <!-- <li class="nav-item dropdown">
-                            <a class="nav-link" data-toggle="dropdown" href="#">
+                        <a class="nav-link" data-toggle="dropdown" href="#">
                             <i class="far fa-bell"></i>
-                            <span class="badge badge-warning navbar-badge">1</span>
-                            </a>
-                            <div class="dropdown-menu dropdown-menu-lg dropdown-menu-right">
-                            <span class="dropdown-item dropdown-header">1 Notifications</span>
-                            <div class="dropdown-divider"></div>
-                            
-                            
-                            <div class="dropdown-divider"></div>
+                            <span class="badge badge-warning navbar-badge"><?php echo $unread_count; ?></span>
+                        </a>
+                        <div class="dropdown-menu dropdown-menu-lg dropdown-menu-right">
+                        <span class="dropdown-item dropdown-header"><?php echo $unread_count; ?> Notifications</span>
+                        <div class="dropdown-divider"></div>
+                        
+                        
+                        <div class="dropdown-divider"></div>
                             <a href="view_appointments.php" class="dropdown-item dropdown-footer">See All Notifications</a>
-                            </div>
-                        </li> -->
+                        </div>
+                    </li> -->
                         
 
                         <!-- Nav Item - Search Dropdown (Visible Only XS) -->
@@ -263,8 +293,8 @@ mysqli_query($conn, $update_sql);
                      
                         <div class="topbar-divider d-none d-sm-block"></div>
 
-                        <!-- Nav Item - User Information -->
-                       
+                        
+
                     </ul>
 
                 </nav>
@@ -275,7 +305,7 @@ mysqli_query($conn, $update_sql);
 
                     <!-- Page Heading -->
                     <div class="d-sm-flex align-items-center justify-content-between mb-4">
-                        <h1 class="h3 mb-0 text-gray-800">Pending Appointments</h1>
+                        <h1 class="h3 mb-0 text-gray-800">View Appointments</h1>
                     </div>
 
                     <!-- Content Row -->
@@ -295,7 +325,7 @@ mysqli_query($conn, $update_sql);
                           <th>Date</th>
                           <th>Time</th>
                           <th>Status</th>
-                          <th>Actions</th>
+                          <th>Actions</th> 
                         </tr>
                         </thead>
                         <tbody>
@@ -312,17 +342,8 @@ mysqli_query($conn, $update_sql);
                                     <td><?php echo $row["time"] ?></td>
                                     <td><?php echo $row["status"] ?></td>
                                     <td class="text-end"p-3>                                        
-                                        <button 
-                                        class="btn btn-icon btn-success" 
-                                        data-toggle="modal" 
-                                        data-target="#declineModal" 
-                                        data-comment="<?php echo htmlspecialchars($row['comments']); ?>"  
-                                        data-reply="<?php echo htmlspecialchars($row['reply']); ?>" 
-                                        data-appointment-id="<?php echo $row['id']; ?>" 
-                                        data-status="<?php echo htmlspecialchars($row['status']); ?>">
-                                            <i class="fas fa-check"></i>
-                                        </button>
-                                    </td>
+                                    <button class="btn btn-icon btn-success" data-toggle="modal" data-target="#declineModal" data-comment="<?php echo htmlspecialchars($row['comments']); ?>"  data-reply="<?php echo htmlspecialchars($row['reply']); ?>" data-appointment-id="<?php echo $row['id']; ?>" data-status="<?php echo htmlspecialchars($row['status']); ?>"><i class="fas fa-check"></i></button>
+                                    <td>
                                 </tr>
 
                                 <div class="modal fade" id="declineModal" tabindex="-1" role="dialog" aria-labelledby="declineModalLabel" aria-hidden="true">
@@ -405,7 +426,7 @@ mysqli_query($conn, $update_sql);
                 <div class="modal-header">
                     <h5 class="modal-title" id="exampleModalLabel">Ready to Leave?</h5>
                     <button class="close" type="button" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">×</span>
+                        <span aria-hidden="true">&times;</span>
                     </button>
                 </div>
                 <div class="modal-body">Select "Logout" below if you are ready to end your current session.</div>
@@ -456,12 +477,24 @@ mysqli_query($conn, $update_sql);
     </script>
 </script>
 <script>
-    document.getElementById('toggleSwitch').addEventListener('change', function() {
-        if (this.checked) {
-            document.getElementById('checkedValue').value = 'Approved';
-        } else {
-            document.getElementById('checkedValue').value = 'Declined';
-        }
+    $('#declineModal').on('show.bs.modal', function (event) {
+        var button = $(event.relatedTarget); // Button that triggered the modal
+        var comment = button.data('comment'); // Extract info from data-* attributes
+        var appointmentId = button.data('appointment-id'); // Extract appointment ID
+        var reply = button.data('reply'); // Extract reply
+        var status = button.data('status'); // Extract status
+        
+        var modal = $(this);
+        modal.find('.modal-body #comment').val(comment);
+        modal.find('.modal-body #appointment_id').val(appointmentId);
+        modal.find('.modal-body #reply').val(reply);
+        modal.find('.modal-body #checkedValue').val(status);
+        modal.find('.modal-body #status').val(status);
+    });
+
+    document.getElementById('status').addEventListener('change', function () {
+        var selectedValue = this.value;
+        document.getElementById('checkedValue').value = selectedValue;
     });
 </script>
 

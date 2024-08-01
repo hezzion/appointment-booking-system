@@ -339,8 +339,6 @@ aria-hidden="true">
             
                 <!-- ./col -->
                 
-
-
                 <section class="content">
                 <div class="container-fluid" style="margin-top: 0px;">
                     <div class="row">
