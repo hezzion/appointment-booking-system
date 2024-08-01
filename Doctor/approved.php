@@ -159,7 +159,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             <hr class="sidebar-divider my-0">
 
             <!-- Nav Item - Dashboard -->
-            <li class="nav-item active">
+            <li class="nav-item">
                 <a class="nav-link" href="index.php">
                     <i class="fas fa-fw fa-tachometer-alt"></i>
                     <span>Dashboard</span></a>
@@ -170,7 +170,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
             <!-- Nav Item - Pages Collapse Menu -->
 
-            <li class="nav-item">
+            <li class="nav-item active">
                     <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseThree"
                         aria-expanded="true" aria-controls="collapseThree">
                         <i class="fas fa-fw fa-cog"></i>
@@ -180,10 +180,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                         <div class="bg-white py-2 collapse-inner rounded">
                         
                             <a class="collapse-item" href="view_appointments.php">View Appointments</a>
-                            <a class="collapse-item" href="approved.php">Aproved Appointments</a>
+                            <a class="collapse-item" href="pending.php">Pending Appointments</a>
+                            <a class="collapse-item" href="approved.php">Approved Appointments</a>
                             <a class="collapse-item" href="declined.php">Declined Appointments</a>
-                           
-                           
                         </div>
                     </div>
                 </li>
@@ -234,20 +233,20 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
                     <!-- Topbar Navbar -->
                     <ul class="navbar-nav ml-auto">
-                    <li class="nav-item dropdown">
-                            <a class="nav-link" data-toggle="dropdown" href="#">
-                            <i class="far fa-bell"></i>
-                            <span class="badge badge-warning navbar-badge">1</span>
-                            </a>
-                            <div class="dropdown-menu dropdown-menu-lg dropdown-menu-right">
-                            <span class="dropdown-item dropdown-header">1 Notifications</span>
-                            <div class="dropdown-divider"></div>
-                            
-                            
-                            <div class="dropdown-divider"></div>
-                            <a href="view_appointments.php" class="dropdown-item dropdown-footer">See All Notifications</a>
-                            </div>
-                        </li>
+                    <!-- <li class="nav-item dropdown">
+                        <a class="nav-link" data-toggle="dropdown" href="#">
+                        <i class="far fa-bell"></i>
+                        <span class="badge badge-warning navbar-badge">1</span>
+                        </a>
+                        <div class="dropdown-menu dropdown-menu-lg dropdown-menu-right">
+                        <span class="dropdown-item dropdown-header">1 Notifications</span>
+                        <div class="dropdown-divider"></div>
+                        
+                        
+                        <div class="dropdown-divider"></div>
+                        <a href="view_appointments.php" class="dropdown-item dropdown-footer">See All Notifications</a>
+                        </div>
+                    </li> -->
                         
 
                         <!-- Nav Item - Search Dropdown (Visible Only XS) -->
@@ -271,7 +270,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
                     <!-- Page Heading -->
                     <div class="d-sm-flex align-items-center justify-content-between mb-4">
-                        <h1 class="h3 mb-0 text-gray-800">View Appointments</h1>
+                        <h1 class="h3 mb-0 text-gray-800">Approved Appointments</h1>
                     </div>
 
                     <!-- Content Row -->

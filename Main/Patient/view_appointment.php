@@ -12,7 +12,8 @@ $user_id = $_SESSION['user_id'];
 $sql = "SELECT * FROM patients WHERE user_id = '$user_id'";
 $result = mysqli_query($conn, $sql);
 
-
+$update_sql = "UPDATE notifications SET is_read_user = 1 WHERE user_id = '$user_id' AND is_read_user = 0";
+mysqli_query($conn, $update_sql);
 ?>
 
 <!DOCTYPE html>
@@ -161,7 +162,7 @@ aria-hidden="true">
 
                     <!-- Topbar Navbar -->
                     <ul class="navbar-nav ml-auto">
-                        <li class="nav-item dropdown">
+                        <!-- <li class="nav-item dropdown">
                             <a class="nav-link" data-toggle="dropdown" href="#">
                             <i class="far fa-bell"></i>
                             <span class="badge badge-warning navbar-badge">1</span>
@@ -174,7 +175,7 @@ aria-hidden="true">
                             <div class="dropdown-divider"></div>
                             <a href="view_appointment.php" class="dropdown-item dropdown-footer">See All Notifications</a>
                             </div>
-                        </li>
+                        </li> -->
 
                         <!-- Nav Item - Search Dropdown (Visible Only XS) -->
                         <li class="nav-item dropdown no-arrow d-sm-none">

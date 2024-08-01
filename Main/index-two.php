@@ -83,7 +83,7 @@
         <!-- Navbar End -->
 
         <!-- Start Hero -->
-        <section class="bg-half-170 pb-0 d-table w-100" style="padding: 30px;">
+        <section class="bg-half-170 pb-0 d-table w-100" style="padding: 80px;">
             <div class="container">
                 <div class="row mt-5 mt-sm-0 align-items-center">
                     <div class="col-md-6">

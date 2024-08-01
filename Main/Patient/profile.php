@@ -192,7 +192,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                         </div>
                     </form>
                     <!-- Topbar Navbar -->
-                    <ul class="navbar-nav ml-auto">
+                    <!-- <ul class="navbar-nav ml-auto">
                         <li class="nav-item dropdown">
                             <a class="nav-link" data-toggle="dropdown" href="#">
                                 <i class="far fa-bell"></i>
@@ -204,7 +204,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                                 <a href="view_appointment.php" class="dropdown-item dropdown-footer">See All Notifications</a>
                             </div>
                         </li>
-                    </ul>
+                    </ul> -->
                 </nav>
                 <!-- End of Topbar -->
 
@@ -312,7 +312,14 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             <!-- End of Main Content -->
 
             <!-- Footer -->
-            
+            <footer class="sticky-footer bg-white">
+                <div class="container my-auto">
+                    <div class="copyright text-center my-auto">
+                        <span>Copyright &copy; Your Website 2024</span>
+                    </div>
+                </div>
+            </footer>
+            <!-- End of Footer -->
 
         </div>
         <!-- End of Content Wrapper -->

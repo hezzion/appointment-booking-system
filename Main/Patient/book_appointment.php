@@ -33,10 +33,11 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $comments = mysqli_real_escape_string($conn, $_POST["comments"]);
 
     // Fetch the current slot count for the selected doctor
-    $slot_sql = "SELECT slot FROM doctors WHERE fullname = '$doctor'";
+    $slot_sql = "SELECT id, slot FROM doctors WHERE fullname = '$doctor'";
     $slot_result = mysqli_query($conn, $slot_sql);
     if (mysqli_num_rows($slot_result) > 0) {
         $slot_row = mysqli_fetch_assoc($slot_result);
+        $doctor_id = $slot_row["id"];
         $available_slots = $slot_row["slot"];
     } else {
         $available_slots = 0;
@@ -50,8 +51,15 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             // Decrement the slot count for the doctor
             $update_slot_sql = "UPDATE doctors SET slot = slot - 1 WHERE fullname = '$doctor'";
             if ($conn->query($update_slot_sql) === TRUE) {
-                header("Location: index.php");
-                exit();
+                // Insert notification for the doctor
+                $notification_message = "A new appointment has been booked by $patientname for $date at $time.";
+                $notification_sql = "INSERT INTO notifications (user_id, doctor_id, message, is_read_user) VALUES ('$user_id', '$doctor_id', '$notification_message', 1)";
+                if ($conn->query($notification_sql) === TRUE) {
+                    header("Location: index.php");
+                    exit();
+                } else {
+                    echo "Error inserting notification: " . $conn->error;
+                }
             } else {
                 echo "Error updating slot: " . $conn->error;
             }
@@ -209,20 +217,20 @@ aria-hidden="true">
 
                     <!-- Topbar Navbar -->
                     <ul class="navbar-nav ml-auto">
-                    <li class="nav-item dropdown">
-                            <a class="nav-link" data-toggle="dropdown" href="#">
-                            <i class="far fa-bell"></i>
-                            <span class="badge badge-warning navbar-badge">1</span>
-                            </a>
-                            <div class="dropdown-menu dropdown-menu-lg dropdown-menu-right">
-                            <span class="dropdown-item dropdown-header">1 Notifications</span>
-                            <div class="dropdown-divider"></div>
-                            
-                            
-                            <div class="dropdown-divider"></div>
-                            <a href="view_appointment.php" class="dropdown-item dropdown-footer">See All Notifications</a>
-                            </div>
-                        </li>
+                    <!-- <li class="nav-item dropdown">
+                        <a class="nav-link" data-toggle="dropdown" href="#">
+                        <i class="far fa-bell"></i>
+                        <span class="badge badge-warning navbar-badge">1</span>
+                        </a>
+                        <div class="dropdown-menu dropdown-menu-lg dropdown-menu-right">
+                        <span class="dropdown-item dropdown-header">1 Notifications</span>
+                        <div class="dropdown-divider"></div>
+                        
+                        
+                        <div class="dropdown-divider"></div>
+                        <a href="view_appointment.php" class="dropdown-item dropdown-footer">See All Notifications</a>
+                        </div>
+                    </li> -->
 
                         <!-- Nav Item - Search Dropdown (Visible Only XS) -->
                         <li class="nav-item dropdown no-arrow d-sm-none">

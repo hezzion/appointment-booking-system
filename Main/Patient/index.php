@@ -39,6 +39,24 @@ if ($resultTotalAppointments && $resultTotalApproved && $resultTotalDeclined) {
     die("Query failed: " . $conn->error);
 }
 
+$unread_sql = "SELECT COUNT(*) AS unread_count FROM notifications WHERE is_read_user = FALSE AND user_id = $user_id";
+$unread_result = mysqli_query($conn, $unread_sql);
+$unread_count = 0;
+
+if ($unread_result) {
+    $unread_row = mysqli_fetch_assoc($unread_result);
+    $unread_count = $unread_row['unread_count'];
+}
+
+$notifications_sql = "SELECT * FROM notifications WHERE user_id = $user_id AND is_read_user = FALSE ORDER BY created_at DESC";
+$notifications_result = mysqli_query($conn, $notifications_sql);
+$notifications = [];
+
+if ($notifications_result) {
+    while ($notification = mysqli_fetch_assoc($notifications_result)) {
+        $notifications[] = $notification;
+    }
+}
 
 ?>
 
@@ -190,15 +208,20 @@ aria-hidden="true">
                         <li class="nav-item dropdown">
                             <a class="nav-link" data-toggle="dropdown" href="#">
                             <i class="far fa-bell"></i>
-                            <span class="badge badge-warning navbar-badge">1</span>
+                            <span class="badge badge-warning navbar-badge"><?php echo $unread_count ?></span>
                             </a>
                             <div class="dropdown-menu dropdown-menu-lg dropdown-menu-right">
-                            <span class="dropdown-item dropdown-header">1 Notifications</span>
-                            <div class="dropdown-divider"></div>
-                            
-                            
-                            <div class="dropdown-divider"></div>
-                            <a href="view_appointment.php" class="dropdown-item dropdown-footer">See All Notifications</a>
+                                <span class="dropdown-item dropdown-header"><?php echo $unread_count ?> Notifications</span>
+                                <div class="dropdown-divider"></div>
+                                <!-- Notifications list here -->
+                                <?php foreach ($notifications as $notification): ?>
+                                    <a href="#" class="dropdown-item">
+                                        <i class="fas fa-envelope mr-2"></i> <?php echo $notification['message']; ?>
+                                        <span class="float-right text-muted text-sm"><?php echo $notification['created_at']; ?></span>
+                                    </a>
+                                    <div class="dropdown-divider"></div>
+                                <?php endforeach; ?>
+                                <a href="view_appointment.php" class="dropdown-item dropdown-footer">See All Notifications</a>
                             </div>
                         </li>
 

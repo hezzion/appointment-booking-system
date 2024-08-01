@@ -11,8 +11,8 @@ if ($conn->connect_error) {
 	die("Connection failed: " .$conn->connect_error);
 }
 
-    $sql = "SELECT * FROM patients";
-    $result = mysqli_query($conn, $sql);
+$sql = "SELECT * FROM patients";
+$result = mysqli_query($conn, $sql);
 
 ?>
 

@@ -44,6 +44,26 @@ if (!$resultDoctorAppointments) {
 }
 $totalDoctorAppointments = $resultDoctorAppointments->fetch_assoc()['total_doctor_appointments'];
 
+$unread_sql = "SELECT COUNT(*) AS unread_count FROM notifications WHERE is_read_doctor = FALSE";
+$unread_result = mysqli_query($conn, $unread_sql);
+$unread_count = 0;
+
+if ($unread_result) {
+    $unread_row = mysqli_fetch_assoc($unread_result);
+    $unread_count = $unread_row['unread_count'];
+}
+
+$unread_sql2 = "SELECT * FROM notifications WHERE is_read_doctor = FALSE ORDER BY created_at DESC";
+$unread_result2 = mysqli_query($conn, $unread_sql2);
+$unread_notifications = [];
+
+if ($unread_result2) {
+    while ($row = mysqli_fetch_assoc($unread_result2)) {
+        $unread_notifications[] = $row;
+    }
+}
+
+
 ?>
 
 <!DOCTYPE html>
@@ -136,7 +156,8 @@ aria-hidden="true">
                             <div class="bg-white py-2 collapse-inner rounded">
                             
                                 <a class="collapse-item" href="view_appointments.php">View Appointments</a>
-                                <a class="collapse-item" href="approved.php">Aproved Appointments</a>
+                                <a class="collapse-item" href="pending.php">Pending Appointments</a>
+                                <a class="collapse-item" href="approved.php">Approved Appointments</a>
                                 <a class="collapse-item" href="declined.php">Declined Appointments</a>
                                
                             
@@ -191,19 +212,23 @@ aria-hidden="true">
                     <!-- Topbar Navbar -->
                     <ul class="navbar-nav ml-auto">
                     <li class="nav-item dropdown">
-                            <a class="nav-link" data-toggle="dropdown" href="#">
+                        <a class="nav-link" data-toggle="dropdown" href="#">
                             <i class="far fa-bell"></i>
-                            <span class="badge badge-warning navbar-badge">1</span>
-                            </a>
-                            <div class="dropdown-menu dropdown-menu-lg dropdown-menu-right">
-                            <span class="dropdown-item dropdown-header">1 Notifications</span>
+                            <span class="badge badge-warning navbar-badge"><?php echo $unread_count; ?></span>
+                        </a>
+                        <div class="dropdown-menu dropdown-menu-lg dropdown-menu-right">
+                            <span class="dropdown-item dropdown-header"><?php echo $unread_count; ?> Notifications</span>
                             <div class="dropdown-divider"></div>
-                            
-                            
+                            <?php foreach ($unread_notifications as $notification) { ?>
+                                <div class="dropdown-item">
+                                    <i class="fas fa-envelope mr-2"></i> <?php echo $notification['message']; ?>
+                                    <span class="float-right text-muted text-sm"><?php echo $notification['created_at']; ?></span>
+                                </div>
+                            <?php } ?>
                             <div class="dropdown-divider"></div>
-                            <a href="view_appointments.php" class="dropdown-item dropdown-footer">See All Notifications</a>
-                            </div>
-                        </li>
+                            <a href="pending.php" class="dropdown-item dropdown-footer">See All Notifications</a>
+                        </div>
+                    </li>
 
                         <!-- Nav Item - Search Dropdown (Visible Only XS) -->
                         <li class="nav-item dropdown no-arrow d-sm-none">
